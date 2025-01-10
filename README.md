@@ -1,20 +1,32 @@
 # assignments
 
-This repository is used to build and deliver
-assignments to students.
+> **STUDENTS!**
+>
+> Do not work on this repository directly.
+> Your instructor will provide you with a personal
+> repository for your assignments.
 
-To deliver assignemnts to students, copy or
-move files into the subdirectories of `update/`.
-When each student next runs `update` their
-repository will be updated based on which
-subdirectory you placed the file.
+When a student runs `update` in their assignment
+repository, the script uses this repository to
+update the student's repository.
 
-## Subdirectories of `update/`
+Each file in `update/add` is copied into the root
+of the student's repository if it does not
+exist in the root of the student's repository.
+If the file is a directory, it and its contents are
+recursively copied.
 
-- `add/` - Files in this directory are copied if they
-    do not exist in the student's repository.
-- `delete/` - Files in this directory are deleted from
-    the student's repository.
-- `overwrite/` - Files in this directory are copied
-    to the student's repository. If a file by the
-    same name exists, it is overwritten.
+Each file in `update/overwrite` is copied into the
+root of the student's repository. If the file is
+a directory, it and its contents are recursivley copied.
+If the file exists in the root of the student's repository,
+it is first removed and then the file from this repository
+is copied over.
+
+Each file in `update/delete` is removed from the
+root of the student's repository, including its
+contents if it is a directory.
+
+Each of the directories above are applied in that order.
+So notice that `overwrite` trumps `add`. And `delete`
+trumps all.
