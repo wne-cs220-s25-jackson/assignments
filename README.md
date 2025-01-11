@@ -1,32 +1,39 @@
 # assignments
 
-> **STUDENTS!**
->
-> Do not work on this repository directly.
-> Your instructor will provide you with a personal
-> repository for your assignments.
+## `update`
 
 When a student runs `update` in their assignment
 repository, the script uses this repository to
-update the student's repository.
+update the student's repository's working tree.
 
-Each file in `update/add` is copied into the root
-of the student's repository if it does not
-exist in the root of the student's repository.
-If the file is a directory, it and its contents are
-recursively copied.
+First, each file in `update/delete` is deleted
+from the root of the student's repository's
+working tree, including its contents if it is
+a directory.
 
-Each file in `update/overwrite` is copied into the
-root of the student's repository. If the file is
-a directory, it and its contents are recursivley copied.
-If the file exists in the root of the student's repository,
-it is first removed and then the file from this repository
-is copied over.
+Then, each file in `update/add` are recursively
+copied into the root of the student's repository's
+working tree, if the file is does not exist in
+the root of the student's repository's working tree.
 
-Each file in `update/delete` is removed from the
-root of the student's repository, including its
-contents if it is a directory.
+If you want students to have the exact copy of a file,
+place it in both `update/delete` and `update/add`.
+This will cause it to be deleted and re-added.
+This is good for configuration that you want to be
+the same for all students (e.g., .devcontainer).
 
-Each of the directories above are applied in that order.
-So notice that `overwrite` trumps `add`. And `delete`
-trumps all.
+Place assignments in `update/add`. Then students
+will get a clean copy of the assignment the first
+time they run `update`. Subsequent runs will not
+re-add the assignment since it already exists, thus
+preserving student work. If a student wants to start
+over, or get a fresh copy of the assignment, they can
+rename or delete the assignment first, and then re-run
+update.
+
+## `create-repo`
+
+Run `scripts/create-repo PATH` to create a new local
+repository updated with the initial contents of this
+repository. This is useful for creating a template
+repository to push to new repositories on GitHub.

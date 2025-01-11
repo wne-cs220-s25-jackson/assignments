@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+while [[ ! -e .git ]] && [[ "$(pwd)" != "/" ]]
+do
+    cd ..
+done
+PROJ_DIR="$( pwd )"
+
+ASSIGNMENTS_REPO_URL="https://github.com/wne-cs220-s25-jackson/assignments.git"
+ASSIGNMENTS_REPO_DIR="${HOME}/.local/assignments"
+
+main() {
+    echo "Fetching upstream..."
+    update-upstream
+    echo "Deleting files..."
+    delete-files
+    echo "Adding files..."
+    add-files
+    echo "Update complete."
+    echo "To re-copy a skipped file, delete or rename it, then retry."
+}
+
+update-upstream() {
+    test -d "${ASSIGNMENTS_REPO_DIR}/.git" || git clone "${ASSIGNMENTS_REPO_URL}" "${ASSIGNMENTS_REPO_DIR}"
+    git -C "${ASSIGNMENTS_REPO_DIR}" pull
+}
+
+delete-files() {
+    cd "${ASSIGNMENTS_REPO_DIR}/update/delete"
+    delete-named-files *
+    delete-named-files .*
+}
+
+delete-named-files() {
+    for n in "$@"
+    do
+        if is-normal "${n}"
+        then
+            if is-missing-in-project "${n}"
+            then
+                :
+            else
+                echo "  ${n}"
+                rm -rf "${PROJ_DIR}/${n}"
+            fi
+        fi
+    done
+}
+
+add-files() {
+    cd "${ASSIGNMENTS_REPO_DIR}/update/add"
+    add-named-files *
+    add-named-files .*
+}
+
+add-named-files() {
+    for n in "$@"
+    do
+        if is-normal "${n}"
+        then
+            if is-missing-in-project "${n}"
+            then
+                echo "  ${n}"
+                cp -rf "${n}" "${PROJ_DIR}/${n}"
+            else
+                echo "  File exists, skipping ${n}"
+            fi
+        fi
+    done
+}
+
+
+is-normal() {
+    test "${1}" != '*' && test "${1}" != '.' && test "${1}" != '..' && test "${1}" != '.git'
+}
+
+is-a-filename() {
+    test "${1}" != '*'
+}
+
+is-missing-in-project() {
+    test ! -e "${PROJ_DIR}/${1}"
+}
+
+main
+
+
+
