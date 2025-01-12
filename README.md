@@ -1,8 +1,16 @@
 # assignments
 
-## `update`
+To use this repo...
 
-When a student runs `update` in their assignment
+1. Configure `update`
+2. Create initial student repositories
+
+## 1. Configure `update`
+
+Add files to `update/add` and `update/delete` to
+control how `update` will update student repositories.
+Once you have committed and pushed your changes,
+when a student runs `update` in their assignment
 repository, the script uses this repository to
 update the student's repository's working tree.
 
@@ -34,7 +42,7 @@ since it already exists, preserving student work.
 If a student wants to start over, or get a fresh copy of the assignment,
 they can rename or delete the assignment first, and then re-run update.
 
-## Create student repositories
+## 2. Create initial student repositories
 
 Follow the instructions here to create a repository
 for each of your students in a GitHub organization
