@@ -18,8 +18,7 @@ main() {
     delete-files
     echo "Adding files..."
     add-files
-    echo "Update complete."
-    echo "To re-copy a skipped file, delete or rename it, then retry."
+    echo "To add a fresh copy of a SKIPPED file, delete/rename it, then try again."
 }
 
 update-upstream() {
@@ -42,8 +41,8 @@ delete-named-files() {
             then
                 :
             else
-                echo "  ${n}"
                 rm -rf "${PROJ_DIR}/${n}"
+                echo "  - ${n}"
             fi
         fi
     done
@@ -62,10 +61,10 @@ add-named-files() {
         then
             if is-missing-in-project "${n}"
             then
-                echo "  ${n}"
                 cp -rf "${n}" "${PROJ_DIR}/${n}"
+                echo "  + ${n}"
             else
-                echo "  File exists, skipping ${n}"
+                echo "  o SKIPPED ${n}"
             fi
         fi
     done
