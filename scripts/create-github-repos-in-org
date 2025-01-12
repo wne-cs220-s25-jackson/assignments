@@ -30,10 +30,9 @@ create-template-repo() {
 push-template-repo() {
     cd "${PROJ_DIR}/tmp/template-repo"
     while IFS=$'\n' read -r name; do
-        git remote remove origin || true
-        set -x
-        gh repo create "${TARGET_GITHUB_ORG}/${name}" --private --push --disable-wiki --disable-issues --source=.
-        set +x
+        echo "Create ${TARGET_GITHUB_ORG}/${name}"
+        git remote remove origin &> /dev/null || true
+        gh repo create "${TARGET_GITHUB_ORG}/${name}" --private --push --disable-wiki --disable-issues --source=. || true
         sleep 5
     done
 }
