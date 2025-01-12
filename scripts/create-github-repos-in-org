@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+TARGET_GITHUB_ORG="${1}"
+# Stdin contains a reponame per line.
+
+main() {
+    find-project-dir
+    create-template-repo
+    push-template-repo
+}
+
+find-project-dir() {
+    while [[ ! -e .git ]] && [[ "$(pwd)" != "/" ]]
+    do
+        cd ..
+    done
+    PROJ_DIR="$( pwd )"
+}
+
+create-template-repo() {
+    git init "${PROJ_DIR}/tmp/template-repo"
+    cd "${PROJ_DIR}/tmp/template-repo"
+    "${PROJ_DIR}/update/add/.devcontainer/scripts/update"
+    git add . || true
+    git commit -m 'feat: initial commit' || true
+}
+
+push-template-repo() {
+    cd "${PROJ_DIR}/tmp/template-repo"
+    while IFS=$'\n' read -r name; do
+        git remote remove origin || true
+        set -x
+        gh repo create "${TARGET_GITHUB_ORG}/${name}" --private --push --disable-wiki --disable-issues --source=.
+        set +x
+        sleep 5
+    done
+}
+
+main

@@ -1,6 +1,16 @@
 {
-    "image" : "mcr.microsoft.com/devcontainers/base:alpine",
+    "image" : "mcr.microsoft.com/devcontainers/universal",
     "remoteEnv": {
         "PATH": "${containerEnv:PATH}:${containerWorkspaceFolder}/scripts"
+    },
+
+    "customizations": {
+        "codespaces": {
+            "repositories": {
+                "wne-cs220-s25-jackson-individual/*": {
+                    "permissions": "write-all"
+                }
+            }
+        }
     }
 }
