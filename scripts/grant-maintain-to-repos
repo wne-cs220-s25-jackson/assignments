@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+# $1 - The org.
+# stdin - List of "name repo" pairs, one per line.
+#
+# For example, assume a file named assignments containing:
+#
+#     felder  hotel_california
+#     walsh   hotel_california
+#
+# We an then assign felder and walsh to the hotel_california repo
+# in the eagles organization as follows:
+#
+#     assign-users-to-repos eagles < assignments
+
+TARGET_GITHUB_ORG="${1}"
+
+while IFS=$'\n' read -r name repo
+do
+    gh api \
+        --method PUT \
+        -H "Accept: application/vnd.github+json" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        "/repos/${TARGET_GITHUB_ORG}/${repo}/collaborators/${name}" \
+        -f "permission=maintain" \
+        || true
+    echo "Create ${TARGET_GITHUB_ORG}/${name}"
+    sleep 5
+done
