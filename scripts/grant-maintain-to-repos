@@ -1,24 +1,35 @@
 #!/usr/bin/env bash
+#
+# This script will invite accounts to maintain repos within a
+# single GitHub organization.
+#
+# In a codespace...
+# 
+#    1. Set GITHUB_TOKEN to a personal access token with scopes:
+#
+#        repo
+#        write:org
+#
+#    2. Create a file tmp/data with the format below.
+#       Use a single space to delimit username from reponame (not full URL).
+#       Make sure the last line ends with a newline character.
+#
+#        username1 reponame1
+#        username2 reponame2
+#        ...
+#
+#    3. Run this command below replacing ORGNAME with the
+#       GitHub organization name (not full URL) containing the repos.
+#
+#        scripts/grant-maintain-to-repos ORGNAME < tmp/data
 
 set -eu -o pipefail
 
-# $1 - The org.
-# stdin - List of "name repo" pairs, one per line.
-#
-# For example, assume a file named assignments containing:
-#
-#     felder  hotel_california
-#     walsh   hotel_california
-#
-# We an then assign felder and walsh to the hotel_california repo
-# in the eagles organization as follows:
-#
-#     assign-users-to-repos eagles < assignments
-
 TARGET_GITHUB_ORG="${1}"
 
-while IFS=$'\n' read -r name repo
+while read -r name repo
 do
+    echo "Add ${name} as maintainer to ${TARGET_GITHUB_ORG}/${repo}"
     gh api \
         --method PUT \
         -H "Accept: application/vnd.github+json" \
@@ -26,6 +37,5 @@ do
         "/repos/${TARGET_GITHUB_ORG}/${repo}/collaborators/${name}" \
         -f "permission=maintain" \
         || true
-    echo "Create ${TARGET_GITHUB_ORG}/${name}"
     sleep 5
 done
