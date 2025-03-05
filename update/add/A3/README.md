@@ -1,7 +1,7 @@
-# A2 Markdown, Paths, and Linux Commands
+# A3 Licenses, Agile, Scrum, and Git
 
-1. Complete this assignment in a Codespace or GitPod development environment.
-2. Instructions are in each of the topic files. `gitkit.md` is intentionally empty. See `markdown.md` for instructions.
+1. Complete this assignment in a Codespace.
+2. Instructions are in each of the topic files.
 3. Submit your work by committing your changes to main and push it to your repository.
 4. Check your work by browsing your files on GitHub (not in Codespaces).
 
